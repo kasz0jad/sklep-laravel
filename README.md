@@ -26,7 +26,7 @@ Autor: [Imię Nazwisko]
 - [x] Kolumna `role` w tabeli `users` (migracja) i metody `isAdmin()`, `isModerator()` w modelu User
 - [x] Rejestracja z walidacją i szyfrowaniem hasła (bcrypt)
 - [x] Logowanie i wylogowanie
-- [ ] Middleware ról i różne strony dla klienta, moderatora i admina
+- [x] Middleware ról i różne strony dla klienta, moderatora i admina
 - [ ] Panel administratora (CRUD użytkowników)
 - [ ] Produkty (dodawanie i usuwanie: moderator, admin)
 - [ ] Koszyk w sesji i składanie zamówień
@@ -55,3 +55,8 @@ Autor: [Imię Nazwisko]
 
 ### CSRF
 - `@csrf` w każdym formularzu dodaje token chroniący przed fałszowaniem żądań. Bez niego Laravel zwraca błąd 419.
+
+### Middleware ról (RoleMiddleware)
+- Middleware to filtr wykonywany przed trasą. Sprawdza, czy rola zalogowanego użytkownika jest na liście dozwolonych, jeśli nie, zwraca 403.
+- `role:moderator,admin` w trasie przekazuje dozwolone role jako argumenty.
+- `auth` przekierowuje niezalogowanych na /login.
