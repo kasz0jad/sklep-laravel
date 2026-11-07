@@ -10,7 +10,8 @@ Autor: [Imię Nazwisko]
 
 ## Instalacja
 1. `composer install`
-2. Skopiuj `.env.example` do `.env` i ustaw dane bazy (`DB_CONNECTION=mariadb`, `DB_DATABASE=projekt`, `DB_USERNAME=root`, puste hasło)
+2. Skopiuj `.env.example` do `.env` i ustaw bazę:
+   `DB_CONNECTION=mariadb`, `DB_DATABASE=projekt`, `DB_USERNAME=root`, puste hasło
 3. `php artisan key:generate`
 4. `php artisan migrate`
 5. `php artisan serve`, potem wejdź na http://127.0.0.1:8000
@@ -20,23 +21,37 @@ Autor: [Imię Nazwisko]
 - **moderator**: dodaje i usuwa produkty
 - **admin**: zarządza użytkownikami (CRUD) i produktami
 
-## Zrealizowane funkcje
+## Postęp prac
+- [x] Środowisko (PHP, Composer, MariaDB, Git) i repozytorium na GitHubie
+- [x] Kolumna `role` w tabeli `users` (migracja) i metody `isAdmin()`, `isModerator()` w modelu User
 - [x] Rejestracja z walidacją i szyfrowaniem hasła (bcrypt)
 - [x] Logowanie i wylogowanie
-- [ ] Role i middleware
+- [ ] Middleware ról i różne strony dla klienta, moderatora i admina
 - [ ] Panel administratora (CRUD użytkowników)
-- [ ] Produkty
-- [ ] Koszyk w sesji i zamówienia
-- [ ] Wyrażenia regularne, zabezpieczenie przed SQL Injection
+- [ ] Produkty (dodawanie i usuwanie: moderator, admin)
+- [ ] Koszyk w sesji i składanie zamówień
+- [ ] Wyrażenia regularne w walidacji
+- [ ] Zabezpieczenie przed SQL Injection
+- [ ] (opcjonalnie) Aktywacja konta przez e-mail
 
 ## Notatki do obrony
 
+### Migracja `add_role_to_users_table`
+- Migracja to wersjonowana zmiana struktury bazy: `up()` ją wprowadza, `down()` cofa.
+- Domyślna rola nowego użytkownika to `klient`.
+
+### Model User
+- `#[Fillable([...])]` określa pola, które wolno wypełniać masowo (`User::create`). Dodano `role`.
+- `'password' => 'hashed'` w `casts()` powoduje automatyczne szyfrowanie hasła (bcrypt).
+
 ### Rejestracja (AuthController::register)
-- `validate` sprawdza wypełnienie pól, `unique:users,email` pilnuje unikalności e-maila.
-- Hasło szyfruje się samo dzięki `'password' => 'hashed'` w modelu User (bcrypt).
-- Rolę `klient` nadajemy w kodzie, nie z formularza.
+- `validate` sprawdza wypełnienie pól, `unique:users,email` pilnuje unikalności e-maila, `confirmed` wymaga pola `password_confirmation`.
+- Rolę `klient` nadajemy w kodzie, nie z formularza (nikt nie nada sobie roli admina).
 
 ### Logowanie (AuthController::login)
 - `Auth::attempt` sprawdza e-mail i porównuje hasło z hashem w bazie, więc nie trzeba ręcznie niczego odszyfrowywać.
 - `session()->regenerate()` po zalogowaniu chroni przed przejęciem sesji.
 - Wylogowanie jest przez POST z `@csrf`, żeby nikt nie wylogował użytkownika zwykłym linkiem.
+
+### CSRF
+- `@csrf` w każdym formularzu dodaje token chroniący przed fałszowaniem żądań. Bez niego Laravel zwraca błąd 419.

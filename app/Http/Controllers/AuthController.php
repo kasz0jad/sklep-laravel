@@ -33,7 +33,7 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-        public function showLogin()
+    public function showLogin()
     {
         return view('auth.login');
     }
