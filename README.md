@@ -27,7 +27,7 @@ Autor: [Imię Nazwisko]
 - [x] Rejestracja z walidacją i szyfrowaniem hasła (bcrypt)
 - [x] Logowanie i wylogowanie
 - [x] Middleware ról i różne strony dla klienta, moderatora i admina
-- [ ] Panel administratora (CRUD użytkowników)
+- [x] Panel administratora (CRUD użytkowników)
 - [ ] Produkty (dodawanie i usuwanie: moderator, admin)
 - [ ] Koszyk w sesji i składanie zamówień
 - [ ] Wyrażenia regularne w walidacji
@@ -60,3 +60,10 @@ Autor: [Imię Nazwisko]
 - Middleware to filtr wykonywany przed trasą. Sprawdza, czy rola zalogowanego użytkownika jest na liście dozwolonych, jeśli nie, zwraca 403.
 - `role:moderator,admin` w trasie przekazuje dozwolone role jako argumenty.
 - `auth` przekierowuje niezalogowanych na /login.
+
+### Panel admina (Admin\UserController)
+- `Route::resource` generuje 7 tras CRUD. Grupa tras ma middleware `auth` i `role:admin`.
+- `User $user` w metodzie to route model binding: Laravel sam pobiera użytkownika z bazy po ID z adresu.
+- `Rule::unique(...)->ignore($user->id)` pozwala zachować własny e-mail przy edycji.
+- Puste hasło przy edycji jest pomijane (`unset`), więc się nie zmienia.
+- `@method('PUT')` i `@method('DELETE')`: formularze HTML znają tylko GET i POST, Laravel symuluje resztę.

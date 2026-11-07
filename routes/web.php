@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/', function () {
     return view('home');
@@ -30,6 +31,10 @@ Route::middleware(['auth', 'role:moderator,admin'])->get('/moderator', function 
     return view('moderator.index');
 });
 
-Route::middleware(['auth', 'role:admin'])->get('/admin', function () {
-    return view('admin.index');
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        return view('admin.index');
+    })->name('index');
+
+    Route::resource('users', UserController::class);
 });
