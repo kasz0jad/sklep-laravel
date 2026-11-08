@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Użytkownik</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Użytkownik</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 <body>
     <h1>Użytkownik #{{ $user->id }}</h1>
     <p>Imię: {{ $user->name }}</p>

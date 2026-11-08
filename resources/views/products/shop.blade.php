@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Sklep</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Sklep</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 <body>
     <h1>Produkty</h1>
     <p><a href="/dashboard">← Moja strona</a>

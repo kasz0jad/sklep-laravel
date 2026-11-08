@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Logowanie</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
     <h1>Logowanie</h1>

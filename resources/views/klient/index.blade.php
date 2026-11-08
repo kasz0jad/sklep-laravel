@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Strona klienta</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Strona klienta</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 <body>
     <h1>Strona klienta</h1>
     <p>Witaj, {{ auth()->user()->name }}!</p>

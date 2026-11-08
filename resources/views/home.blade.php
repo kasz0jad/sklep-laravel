@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Sklep</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 </head>
 <body>
     <h1>Sklep</h1>

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Moje zamówienia</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Moje zamówienia</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 <body>
     <h1>Moje zamówienia</h1>
     <p><a href="/dashboard">← Moja strona</a></p>

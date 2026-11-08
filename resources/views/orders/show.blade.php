@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Zamówienie</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Zamówienie</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 <body>
     <h1>Zamówienie #{{ $order->id }}</h1>
     <p><a href="{{ route('orders.index') }}">← Moje zamówienia</a></p>

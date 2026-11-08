@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Użytkownicy</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Użytkownicy</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 <body>
     <h1>Użytkownicy</h1>
     <p><a href="{{ route('admin.index') }}">← Panel</a> |

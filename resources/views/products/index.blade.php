@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Zarządzanie produktami</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Zarządzanie produktami</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 <body>
     <h1>Zarządzanie produktami</h1>
     <p><a href="/dashboard">← Panel</a> | <a href="{{ route('products.create') }}">Dodaj produkt</a></p>

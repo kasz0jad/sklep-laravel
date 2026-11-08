@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="pl">
-<head><meta charset="UTF-8"><title>Panel moderatora</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Panel moderatora</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+</head>
 <body>
     <h1>Panel moderatora</h1>
     <p>Witaj, {{ auth()->user()->name }}! Tu będzie zarządzanie produktami.</p>

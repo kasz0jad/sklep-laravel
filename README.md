@@ -98,3 +98,7 @@ Projekt zaliczeniowy z przedmiotu Programowanie zaawansowane.
 - Surowe zapytania są dozwolone tylko z parametrami: `DB::select('... WHERE name = ?', [$x])`, nigdy `"... $x"`.
 - Dodatkowo: walidacja danych wejściowych, `#[Fillable]`, `Rule::in` dla ról.
 
+### Lokalizacja i style
+- `php artisan lang:publish` tworzy folder `lang/`. Tłumaczenia walidacji są w `lang/pl/validation.php`, a nazwy pól w kluczu `attributes`.
+- Język aplikacji ustawia `APP_LOCALE=pl` w `.env`.
+- Wspólny arkusz stylów: `public/css/style.css`, dołączany przez `asset('css/style.css')`.
