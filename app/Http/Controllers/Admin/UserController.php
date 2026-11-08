@@ -28,10 +28,11 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', 'regex:/^[\p{L}\s\-]+$/u'],
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
             'role' => ['required', Rule::in(['klient', 'moderator', 'admin'])],
+            'phone' => ['nullable', 'regex:/^\d{9}$/'],
         ]);
 
         User::create($data);
@@ -47,10 +48,11 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', 'regex:/^[\p{L}\s\-]+$/u'],
             'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
             'password' => 'nullable|string|min:8',
             'role' => ['required', Rule::in(['klient', 'moderator', 'admin'])],
+            'phone' => ['nullable', 'regex:/^\d{9}$/'],
         ]);
 
         if (empty($data['password'])) {

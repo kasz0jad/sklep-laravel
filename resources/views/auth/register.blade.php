@@ -19,6 +19,7 @@
         @csrf
         <p><input type="text" name="name" placeholder="Imię" value="{{ old('name') }}"></p>
         <p><input type="email" name="email" placeholder="E-mail" value="{{ old('email') }}"></p>
+        <p><input type="text" name="phone" placeholder="Telefon (9 cyfr)" value="{{ old('phone') }}"></p>
         <p><input type="password" name="password" placeholder="Hasło"></p>
         <p><input type="password" name="password_confirmation" placeholder="Powtórz hasło"></p>
         <button type="submit">Zarejestruj</button>

@@ -1,7 +1,6 @@
 # Sklep internetowy (Laravel)
 
 Projekt zaliczeniowy z przedmiotu Programowanie zaawansowane.
-Autor: [Imię Nazwisko]
 
 ## Technologie
 - PHP 8.5, Laravel 13
@@ -30,18 +29,20 @@ Autor: [Imię Nazwisko]
 - [x] Panel administratora (CRUD użytkowników)
 - [x] Produkty (dodawanie i usuwanie: moderator, admin)
 - [x] Koszyk w sesji i składanie zamówień
-- [ ] Wyrażenia regularne w walidacji
+- [x] Wyrażenia regularne w walidacji
 - [ ] Zabezpieczenie przed SQL Injection
 - [ ] (opcjonalnie) Aktywacja konta przez e-mail
 
 ## Notatki
 
-### Migracja `add_role_to_users_table`
+### Migracje
 - Migracja to wersjonowana zmiana struktury bazy: `up()` ją wprowadza, `down()` cofa.
-- Domyślna rola nowego użytkownika to `klient`.
+- Wykonanej migracji nie poprawia się edycją pliku. Laravel zapisuje ją w tabeli `migrations`, więc nie uruchomi jej drugi raz. Zmianę robimy nową migracją.
+- Zasada pracy: najpierw uzupełnić `up()` i zapisać plik, dopiero potem `php artisan migrate`.
+- `Schema::hasColumn(...)` pozwala zrobić migrację bezpieczną, gdy nie wiadomo, czy kolumna już istnieje.
 
 ### Model User
-- `#[Fillable([...])]` określa pola, które wolno wypełniać masowo (`User::create`). Dodano `role`.
+- `#[Fillable([...])]` określa pola, które wolno wypełniać masowo (`User::create`).
 - `'password' => 'hashed'` w `casts()` powoduje automatyczne szyfrowanie hasła (bcrypt).
 
 ### Rejestracja (AuthController::register)
@@ -67,17 +68,25 @@ Autor: [Imię Nazwisko]
 - `Rule::unique(...)->ignore($user->id)` pozwala zachować własny e-mail przy edycji.
 - Puste hasło przy edycji jest pomijane (`unset`), więc się nie zmienia.
 - `@method('PUT')` i `@method('DELETE')`: formularze HTML znają tylko GET i POST, Laravel symuluje resztę.
+- Admin nie może usunąć własnego konta.
 
-  ### Produkty (ProductController)
-  - `make:model Product -m` tworzy model i migrację naraz.
-  - Trasy zarządzania mają middleware `role:moderator,admin`, widok sklepu tylko `auth`.
-  - `decimal('price', 8, 2)` przechowuje cenę z dokładnością do groszy.
-  - Wykonanej migracji nie da się "poprawić" edycją pliku: trzeba ją najpierw cofnąć (`migrate:rollback`), bo Laravel zapisuje ją w tabeli `migrations`.
+### Produkty (ProductController)
+- `make:model Product -m` tworzy model i migrację naraz.
+- Trasy zarządzania mają middleware `role:moderator,admin`, widok sklepu tylko `auth`.
+- `decimal('price', 8, 2)` przechowuje cenę z dokładnością do groszy.
 
-  ### Koszyk i zamówienia
+### Koszyk i zamówienia
 - Koszyk jest tablicą `[id_produktu => ilość]` w sesji (`session('cart')`), nie w bazie.
 - Zamówienie jest zapisywane w `DB::transaction`: jeśli cokolwiek się nie uda (np. brak towaru), baza wraca do stanu sprzed zamówienia.
 - `lockForUpdate()` blokuje wiersze produktów na czas transakcji, żeby dwie osoby nie kupiły ostatniej sztuki naraz.
 - W `order_items` kopiujemy nazwę i cenę, żeby historia nie zmieniła się po edycji lub usunięciu produktu.
-- `abort_unless(...)` w `show` pilnuje, żeby klient widział tylko własne zamówienia.
+- `abort_unless(...)` w `OrderController::show` pilnuje, żeby klient widział tylko własne zamówienia.
+
+### Wyrażenia regularne
+- Reguła `regex:/wzorzec/` w walidacji Laravela sprawdza pole wzorcem.
+- Imię: `/^[\p{L}\s\-]+$/u` (`\p{L}` to dowolna litera, także polska; flaga `u` włącza Unicode).
+- Cena: `/^\d{1,6}(\.\d{1,2})?$/` (do 6 cyfr, opcjonalnie kropka i 1-2 miejsca po przecinku).
+- Telefon: `/^\d{9}$/` (dokładnie 9 cyfr).
+- `^` i `$` oznaczają początek i koniec tekstu, `\d` cyfrę, `?` element opcjonalny.
+- Przy regex używamy tablicy reguł, bo znak `|` we wzorcu kolidowałby z separatorem reguł.
 

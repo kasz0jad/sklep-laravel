@@ -8,6 +8,7 @@
 
 <p><input type="text" name="name" placeholder="Imię" value="{{ old('name', $user->name ?? '') }}"></p>
 <p><input type="email" name="email" placeholder="E-mail" value="{{ old('email', $user->email ?? '') }}"></p>
+<p><input type="text" name="phone" placeholder="Telefon (9 cyfr)" value="{{ old('phone', $user->phone ?? '') }}"></p>
 <p><input type="password" name="password" placeholder="Hasło {{ isset($user) ? '(zostaw puste, by nie zmieniać)' : '' }}"></p>
 <p>
     <select name="role">

@@ -31,7 +31,7 @@ class ProductController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
+            'price' => ['required', 'regex:/^\d{1,6}(\.\d{1,2})?$/'],
             'stock' => 'required|integer|min:0',
         ]);
 
