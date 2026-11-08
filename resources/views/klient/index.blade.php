@@ -6,5 +6,6 @@
     <p>Witaj, {{ auth()->user()->name }}!</p>
     <form method="POST" action="/logout">@csrf<button type="submit">Wyloguj</button></form>
     <p><a href="{{ route('shop') }}">Przeglądaj produkty</a></p>
+    <p><a href="{{ route('cart.index') }}">Koszyk</a> | <a href="{{ route('orders.index') }}">Moje zamówienia</a></p>
 </body>
 </html>

@@ -29,12 +29,12 @@ Autor: [Imię Nazwisko]
 - [x] Middleware ról i różne strony dla klienta, moderatora i admina
 - [x] Panel administratora (CRUD użytkowników)
 - [x] Produkty (dodawanie i usuwanie: moderator, admin)
-- [ ] Koszyk w sesji i składanie zamówień
+- [x] Koszyk w sesji i składanie zamówień
 - [ ] Wyrażenia regularne w walidacji
 - [ ] Zabezpieczenie przed SQL Injection
 - [ ] (opcjonalnie) Aktywacja konta przez e-mail
 
-## Notatki do obrony
+## Notatki
 
 ### Migracja `add_role_to_users_table`
 - Migracja to wersjonowana zmiana struktury bazy: `up()` ją wprowadza, `down()` cofa.
@@ -73,3 +73,11 @@ Autor: [Imię Nazwisko]
   - Trasy zarządzania mają middleware `role:moderator,admin`, widok sklepu tylko `auth`.
   - `decimal('price', 8, 2)` przechowuje cenę z dokładnością do groszy.
   - Wykonanej migracji nie da się "poprawić" edycją pliku: trzeba ją najpierw cofnąć (`migrate:rollback`), bo Laravel zapisuje ją w tabeli `migrations`.
+
+  ### Koszyk i zamówienia
+- Koszyk jest tablicą `[id_produktu => ilość]` w sesji (`session('cart')`), nie w bazie.
+- Zamówienie jest zapisywane w `DB::transaction`: jeśli cokolwiek się nie uda (np. brak towaru), baza wraca do stanu sprzed zamówienia.
+- `lockForUpdate()` blokuje wiersze produktów na czas transakcji, żeby dwie osoby nie kupiły ostatniej sztuki naraz.
+- W `order_items` kopiujemy nazwę i cenę, żeby historia nie zmieniła się po edycji lub usunięciu produktu.
+- `abort_unless(...)` w `show` pilnuje, żeby klient widział tylko własne zamówienia.
+
