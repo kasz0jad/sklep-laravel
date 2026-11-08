@@ -8,10 +8,18 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
     // Lista dla klienta (tylko podgląd)
-    public function shop()
+    public function shop(Request $request)
     {
-        $products = Product::orderBy('name')->get();
-        return view('products.shop', compact('products'));
+        $search = $request->query('q', '');
+
+        $products = Product::query()
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            })
+            ->orderBy('name')
+            ->get();
+
+        return view('products.shop', compact('products', 'search'));
     }
 
     // Zarządzanie: moderator i admin

@@ -30,7 +30,8 @@ Projekt zaliczeniowy z przedmiotu Programowanie zaawansowane.
 - [x] Produkty (dodawanie i usuwanie: moderator, admin)
 - [x] Koszyk w sesji i składanie zamówień
 - [x] Wyrażenia regularne w walidacji
-- [ ] Zabezpieczenie przed SQL Injection
+- [x] Zabezpieczenie przed SQL Injection
+- [x] Polskie komunikaty walidacji i CSS
 - [ ] (opcjonalnie) Aktywacja konta przez e-mail
 
 ## Notatki
@@ -89,4 +90,11 @@ Projekt zaliczeniowy z przedmiotu Programowanie zaawansowane.
 - Telefon: `/^\d{9}$/` (dokładnie 9 cyfr).
 - `^` i `$` oznaczają początek i koniec tekstu, `\d` cyfrę, `?` element opcjonalny.
 - Przy regex używamy tablicy reguł, bo znak `|` we wzorcu kolidowałby z separatorem reguł.
+
+### Zabezpieczenie przed SQL Injection
+- SQL Injection to wstrzyknięcie kodu SQL przez pole formularza, gdy tekst użytkownika jest sklejany z zapytaniem.
+- Eloquent i Query Builder używają zapytań parametryzowanych (prepared statements): szkielet zapytania i dane trafiają do bazy osobno, więc wpisany tekst nigdy nie jest wykonywany jako SQL.
+- Przykład: wyszukiwarka produktów `where('name', 'like', '%' . $search . '%')`. Wpisanie `' OR '1'='1` nic nie psuje.
+- Surowe zapytania są dozwolone tylko z parametrami: `DB::select('... WHERE name = ?', [$x])`, nigdy `"... $x"`.
+- Dodatkowo: walidacja danych wejściowych, `#[Fillable]`, `Rule::in` dla ról.
 

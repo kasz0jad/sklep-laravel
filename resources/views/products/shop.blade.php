@@ -16,6 +16,11 @@
         <p style="color:red">{{ $errors->first() }}</p>
     @endif
 
+    <form method="GET" action="{{ route('shop') }}">
+        <input type="text" name="q" placeholder="Szukaj produktu" value="{{ $search }}">
+        <button type="submit">Szukaj</button>
+    </form>
+
     <table border="1" cellpadding="6">
         <tr><th>Nazwa</th><th>Opis</th><th>Cena</th><th>Dostępne</th><th></th></tr>
         @forelse ($products as $product)
