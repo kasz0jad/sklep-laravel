@@ -28,7 +28,7 @@ Autor: [Imię Nazwisko]
 - [x] Logowanie i wylogowanie
 - [x] Middleware ról i różne strony dla klienta, moderatora i admina
 - [x] Panel administratora (CRUD użytkowników)
-- [ ] Produkty (dodawanie i usuwanie: moderator, admin)
+- [x] Produkty (dodawanie i usuwanie: moderator, admin)
 - [ ] Koszyk w sesji i składanie zamówień
 - [ ] Wyrażenia regularne w walidacji
 - [ ] Zabezpieczenie przed SQL Injection
@@ -67,3 +67,9 @@ Autor: [Imię Nazwisko]
 - `Rule::unique(...)->ignore($user->id)` pozwala zachować własny e-mail przy edycji.
 - Puste hasło przy edycji jest pomijane (`unset`), więc się nie zmienia.
 - `@method('PUT')` i `@method('DELETE')`: formularze HTML znają tylko GET i POST, Laravel symuluje resztę.
+
+  ### Produkty (ProductController)
+  - `make:model Product -m` tworzy model i migrację naraz.
+  - Trasy zarządzania mają middleware `role:moderator,admin`, widok sklepu tylko `auth`.
+  - `decimal('price', 8, 2)` przechowuje cenę z dokładnością do groszy.
+  - Wykonanej migracji nie da się "poprawić" edycją pliku: trzeba ją najpierw cofnąć (`migrate:rollback`), bo Laravel zapisuje ją w tabeli `migrations`.
