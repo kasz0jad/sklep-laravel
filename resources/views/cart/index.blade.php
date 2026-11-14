@@ -1,25 +1,25 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Koszyk</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-    <h1>Koszyk</h1>
-    <p><a href="{{ route('shop') }}">← Produkty</a></p>
+@extends('layouts.app')
+@section('title', 'Koszyk')
 
-    @if ($errors->any())
-        <p style="color:red">{{ $errors->first() }}</p>
-    @endif
+@section('content')
+<h1>Koszyk</h1>
 
-    @if ($items->isEmpty())
-        <p>Koszyk jest pusty.</p>
-    @else
-        <table border="1" cellpadding="6">
-            <tr><th>Produkt</th><th>Cena</th><th>Ilość</th><th>Razem</th><th></th></tr>
+@if ($items->isEmpty())
+    <div class="empty">
+        <p>Twój koszyk jest pusty.</p>
+        <a href="{{ route('shop') }}" class="btn">Wróć do sklepu</a>
+    </div>
+@else
+    <div class="table-wrap">
+        <table class="table">
+            <tr><th></th><th>Produkt</th><th>Cena</th><th>Ilość</th><th>Razem</th><th></th></tr>
             @foreach ($items as $item)
                 <tr>
+                    <td>
+                        @if ($item['product']->image)
+                            <img class="thumb" src="{{ asset('storage/' . $item['product']->image) }}" alt="">
+                        @endif
+                    </td>
                     <td>{{ $item['product']->name }}</td>
                     <td>{{ number_format($item['product']->price, 2, ',', ' ') }} zł</td>
                     <td>{{ $item['quantity'] }}</td>
@@ -28,18 +28,17 @@
                         <form method="POST" action="{{ route('cart.remove', $item['product']) }}">
                             @csrf
                             @method('DELETE')
-                            <button type="submit">Usuń</button>
+                            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
                         </form>
                     </td>
                 </tr>
             @endforeach
         </table>
-        <p><strong>Suma: {{ number_format($total, 2, ',', ' ') }} zł</strong></p>
+    </div>
 
-        <form method="POST" action="{{ route('orders.store') }}">
-            @csrf
-            <button type="submit">Złóż zamówienie</button>
-        </form>
-    @endif
-</body>
-</html>
+    <div class="summary">
+        <p class="total">Suma: {{ number_format($total, 2, ',', ' ') }} zł</p>
+        <a href="{{ route('checkout') }}" class="btn btn-block">Przejdź do zamówienia</a>
+    </div>
+@endif
+@endsection

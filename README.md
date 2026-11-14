@@ -102,3 +102,18 @@ Projekt zaliczeniowy z przedmiotu Programowanie zaawansowane.
 - `php artisan lang:publish` tworzy folder `lang/`. Tłumaczenia walidacji są w `lang/pl/validation.php`, a nazwy pól w kluczu `attributes`.
 - Język aplikacji ustawia `APP_LOCALE=pl` w `.env`.
 - Wspólny arkusz stylów: `public/css/style.css`, dołączany przez `asset('css/style.css')`.
+
+### Edycja produktów, zdjęcia, profil
+- Zdjęcia: `$request->file('image')->store('products', 'public')` zapisuje plik w `storage/app/public`, a `php artisan storage:link` udostępnia go przez `public/storage`. W bazie jest tylko ścieżka.
+- Formularz z plikiem wymaga `enctype="multipart/form-data"`.
+- Walidacja `image|max:2048` przyjmuje tylko obrazy do 2 MB.
+- Kategorie to stała `Product::CATEGORIES`, a `Rule::in` pilnuje, żeby nie wysłać innej.
+- Metoda `validated()` w ProductController jest wspólna dla dodawania i edycji.
+- Profil: rola nie jest w walidacji, więc klient nie może jej zmienić. Puste hasło = bez zmiany.
+
+### Wygląd sklepu (LUMA)
+- Wspólny szablon Blade `layouts/app.blade.php` (`@extends`, `@section`, `@yield`): nagłówek, kategorie, koszyk i stopka są w jednym pliku.
+- Style podzielone na `base.css`, `shop.css`, `forms.css`, `panel.css`; kolory w zmiennych CSS (`:root`).
+- Siatka produktów to CSS Grid (`auto-fill`, `minmax`), układ jest responsywny.
+- Podgląd zdjęcia i karty produktu przy dodawaniu: JavaScript (`URL.createObjectURL`) bez wysyłania pliku na serwer.
+- Logo: plik SVG `public/images/logo.svg`.

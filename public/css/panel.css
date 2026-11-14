@@ -1,0 +1,21 @@
+.toolbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; gap:10px; flex-wrap:wrap; }
+.toolbar h1 { margin:0; }
+.back { display:inline-block; margin-bottom:16px; font-size:14px; color:var(--mid); }
+.back:hover { color:var(--black); }
+.table-wrap { overflow-x:auto; }
+.table { width:100%; border-collapse:collapse; background:#fff; border:1px solid var(--line); }
+.table th { background:var(--grey); text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.5px; padding:12px; }
+.table td { padding:12px; border-top:1px solid var(--line); vertical-align:middle; }
+.table img.thumb { width:48px; height:64px; object-fit:cover; border-radius:4px; }
+.actions { display:flex; gap:8px; align-items:center; }
+.tag { display:inline-block; padding:2px 10px; border-radius:999px; font-size:12px; font-weight:600; background:var(--grey); }
+.tag-admin { background:#111; color:#fff; }
+.tag-moderator { background:#fde8c8; }
+.tag-klient { background:#e0ecff; }
+.tiles { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px; }
+.tile { border:1px solid var(--line); border-radius:12px; padding:24px; background:#fff; transition:.15s; }
+.tile:hover { border-color:var(--black); transform:translateY(-2px); }
+.tile h3 { margin:0 0 6px; }
+.tile p { margin:0; color:var(--mid); font-size:14px; }
+.summary { max-width:360px; margin-left:auto; margin-top:20px; text-align:right; }
+.summary .total { font-size:22px; font-weight:700; }

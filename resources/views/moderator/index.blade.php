@@ -1,14 +1,22 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Panel moderatora</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-    <h1>Panel moderatora</h1>
-    <p>Witaj, {{ auth()->user()->name }}! Tu będzie zarządzanie produktami.</p>
-    <p><a href="{{ route('products.index') }}">Zarządzanie produktami</a></p>
-    <form method="POST" action="/logout">@csrf<button type="submit">Wyloguj</button></form>
-</body>
-</html>
+@extends('layouts.app')
+@section('title', 'Panel moderatora')
+
+@section('content')
+<h1>Panel moderatora</h1>
+<p class="muted">Witaj, {{ auth()->user()->name }}!</p>
+
+<div class="tiles">
+    <a href="{{ route('products.index') }}" class="tile">
+        <h3>Produkty</h3>
+        <p>Dodawanie, edycja i usuwanie produktów</p>
+    </a>
+    <a href="{{ route('products.create') }}" class="tile">
+        <h3>Nowy produkt</h3>
+        <p>Dodaj produkt ze zdjęciem</p>
+    </a>
+    <a href="{{ route('shop') }}" class="tile">
+        <h3>Sklep</h3>
+        <p>Podgląd strony dla klientów</p>
+    </a>
+</div>
+@endsection

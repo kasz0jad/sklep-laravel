@@ -1,28 +1,21 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Logowanie</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
+@extends('layouts.app')
+@section('title', 'Logowanie')
+
+@section('content')
+<div class="form-card narrow">
     <h1>Logowanie</h1>
-
-    @if ($errors->any())
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
-
     <form method="POST" action="/login">
         @csrf
-        <p><input type="email" name="email" placeholder="E-mail" value="{{ old('email') }}"></p>
-        <p><input type="password" name="password" placeholder="Hasło"></p>
-        <button type="submit">Zaloguj</button>
+        <div class="field">
+            <label>E-mail</label>
+            <input type="email" name="email" value="{{ old('email') }}">
+        </div>
+        <div class="field">
+            <label>Hasło</label>
+            <input type="password" name="password">
+        </div>
+        <button type="submit" class="btn btn-block">Zaloguj się</button>
     </form>
-
-    <p><a href="/register">Nie masz konta? Zarejestruj się</a></p>
-</body>
-</html>
+    <p class="muted">Nie masz konta? <a href="{{ route('register') }}"><strong>Utwórz konto</strong></a></p>
+</div>
+@endsection

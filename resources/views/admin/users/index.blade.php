@@ -1,42 +1,38 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Użytkownicy</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
+@extends('layouts.app')
+@section('title', 'Użytkownicy')
+
+@section('content')
+<a href="{{ route('admin.index') }}" class="back">← Panel</a>
+
+<div class="toolbar">
     <h1>Użytkownicy</h1>
-    <p><a href="{{ route('admin.index') }}">← Panel</a> |
-       <a href="{{ route('admin.users.create') }}">Dodaj użytkownika</a></p>
+    <a href="{{ route('admin.users.create') }}" class="btn">Dodaj użytkownika</a>
+</div>
 
-    @if (session('success'))
-        <p style="color:green">{{ session('success') }}</p>
-    @endif
-    @if ($errors->any())
-        <p style="color:red">{{ $errors->first() }}</p>
-    @endif
-
-    <table border="1" cellpadding="6">
-        <tr><th>ID</th><th>Imię</th><th>E-mail</th><th>Rola</th><th>Akcje</th></tr>
+<div class="table-wrap">
+    <table class="table">
+        <tr><th>ID</th><th>Imię</th><th>E-mail</th><th>Telefon</th><th>Rola</th><th>Akcje</th></tr>
         @foreach ($users as $user)
             <tr>
                 <td>{{ $user->id }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
-                <td>{{ $user->role }}</td>
+                <td>{{ $user->phone }}</td>
+                <td><span class="tag tag-{{ $user->role }}">{{ $user->role }}</span></td>
                 <td>
-                    <a href="{{ route('admin.users.show', $user) }}">Podgląd</a> |
-                    <a href="{{ route('admin.users.edit', $user) }}">Edytuj</a> |
-                    <form method="POST" action="{{ route('admin.users.destroy', $user) }}" style="display:inline"
-                          onsubmit="return confirm('Usunąć użytkownika?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">Usuń</button>
-                    </form>
+                    <div class="actions">
+                        <a href="{{ route('admin.users.show', $user) }}" class="btn btn-outline btn-sm">Podgląd</a>
+                        <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-outline btn-sm">Edytuj</a>
+                        <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="inline"
+                              onsubmit="return confirm('Usunąć użytkownika?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">Usuń</button>
+                        </form>
+                    </div>
                 </td>
             </tr>
         @endforeach
     </table>
-</body>
-</html>
+</div>
+@endsection

@@ -1,27 +1,28 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Moje zamówienia</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-    <h1>Moje zamówienia</h1>
-    <p><a href="/dashboard">← Moja strona</a></p>
+@extends('layouts.app')
+@section('title', 'Moje zamówienia')
 
-    <table border="1" cellpadding="6">
-        <tr><th>Nr</th><th>Data</th><th>Suma</th><th>Status</th><th></th></tr>
-        @forelse ($orders as $order)
-            <tr>
-                <td>{{ $order->id }}</td>
-                <td>{{ $order->created_at }}</td>
-                <td>{{ number_format($order->total, 2, ',', ' ') }} zł</td>
-                <td>{{ $order->status }}</td>
-                <td><a href="{{ route('orders.show', $order) }}">Szczegóły</a></td>
-            </tr>
-        @empty
-            <tr><td colspan="5">Brak zamówień.</td></tr>
-        @endforelse
-    </table>
-</body>
-</html>
+@section('content')
+<h1>Moje zamówienia</h1>
+
+@if ($orders->isEmpty())
+    <div class="empty">
+        <p>Nie masz jeszcze żadnych zamówień.</p>
+        <a href="{{ route('shop') }}" class="btn">Przejdź do sklepu</a>
+    </div>
+@else
+    <div class="table-wrap">
+        <table class="table">
+            <tr><th>Nr</th><th>Data</th><th>Suma</th><th>Status</th><th></th></tr>
+            @foreach ($orders as $order)
+                <tr>
+                    <td>#{{ $order->id }}</td>
+                    <td>{{ $order->created_at }}</td>
+                    <td>{{ number_format($order->total, 2, ',', ' ') }} zł</td>
+                    <td><span class="tag">{{ $order->status }}</span></td>
+                    <td><a href="{{ route('orders.show', $order) }}" class="btn btn-outline btn-sm">Szczegóły</a></td>
+                </tr>
+            @endforeach
+        </table>
+    </div>
+@endif
+@endsection

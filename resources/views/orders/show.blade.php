@@ -1,21 +1,16 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Zamówienie</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
-    <h1>Zamówienie #{{ $order->id }}</h1>
-    <p><a href="{{ route('orders.index') }}">← Moje zamówienia</a></p>
+@extends('layouts.app')
+@section('title', 'Zamówienie #' . $order->id)
 
-    @if (session('success'))
-        <p style="color:green">{{ session('success') }}</p>
-    @endif
+@section('content')
+<a href="{{ route('orders.index') }}" class="back">← Moje zamówienia</a>
 
-    <p>Data: {{ $order->created_at }} | Status: {{ $order->status }}</p>
+<h1>Zamówienie #{{ $order->id }}</h1>
+<p class="muted">
+    {{ $order->created_at }} · Status: <span class="tag">{{ $order->status }}</span>
+</p>
 
-    <table border="1" cellpadding="6">
+<div class="table-wrap">
+    <table class="table">
         <tr><th>Produkt</th><th>Cena</th><th>Ilość</th><th>Razem</th></tr>
         @foreach ($order->items as $item)
             <tr>
@@ -26,6 +21,18 @@
             </tr>
         @endforeach
     </table>
-    <p><strong>Suma: {{ number_format($order->total, 2, ',', ' ') }} zł</strong></p>
-</body>
-</html>
+</div>
+
+<div class="summary">
+    <p class="total">Suma: {{ number_format($order->total, 2, ',', ' ') }} zł</p>
+</div>
+
+@if ($order->shipping_name)
+    <div class="form-card" style="margin-top:30px">
+        <h2>Dane do wysyłki</h2>
+        <p>{{ $order->shipping_name }}</p>
+        <p>{{ $order->shipping_phone }}</p>
+        <p>{{ $order->shipping_address }}</p>
+    </div>
+@endif
+@endsection

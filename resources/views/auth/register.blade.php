@@ -1,28 +1,33 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Rejestracja</title>
-</head>
-<body>
-    <h1>Rejestracja</h1>
+@extends('layouts.app')
+@section('title', 'Rejestracja')
 
-    @if ($errors->any())
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    @endif
-
+@section('content')
+<div class="form-card narrow">
+    <h1>Utwórz konto</h1>
     <form method="POST" action="/register">
         @csrf
-        <p><input type="text" name="name" placeholder="Imię" value="{{ old('name') }}"></p>
-        <p><input type="email" name="email" placeholder="E-mail" value="{{ old('email') }}"></p>
-        <p><input type="text" name="phone" placeholder="Telefon (9 cyfr)" value="{{ old('phone') }}"></p>
-        <p><input type="password" name="password" placeholder="Hasło"></p>
-        <p><input type="password" name="password_confirmation" placeholder="Powtórz hasło"></p>
-        <button type="submit">Zarejestruj</button>
+        <div class="field">
+            <label>Imię</label>
+            <input type="text" name="name" value="{{ old('name') }}">
+        </div>
+        <div class="field">
+            <label>E-mail</label>
+            <input type="email" name="email" value="{{ old('email') }}">
+        </div>
+        <div class="field">
+            <label>Telefon (9 cyfr, opcjonalnie)</label>
+            <input type="text" name="phone" value="{{ old('phone') }}">
+        </div>
+        <div class="field">
+            <label>Hasło (min. 8 znaków)</label>
+            <input type="password" name="password">
+        </div>
+        <div class="field">
+            <label>Powtórz hasło</label>
+            <input type="password" name="password_confirmation">
+        </div>
+        <button type="submit" class="btn btn-block">Zarejestruj się</button>
     </form>
-</body>
-</html>
+    <p class="muted">Masz już konto? <a href="{{ route('login') }}"><strong>Zaloguj się</strong></a></p>
+</div>
+@endsection

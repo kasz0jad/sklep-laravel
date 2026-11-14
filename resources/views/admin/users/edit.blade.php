@@ -1,18 +1,16 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Edytuj użytkownika</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body>
+@extends('layouts.app')
+@section('title', 'Edytuj użytkownika')
+
+@section('content')
+<a href="{{ route('admin.users.index') }}" class="back">← Lista użytkowników</a>
+
+<div class="form-card">
     <h1>Edytuj użytkownika #{{ $user->id }}</h1>
     <form method="POST" action="{{ route('admin.users.update', $user) }}">
         @csrf
         @method('PUT')
         @include('admin.users._form')
-        <button type="submit">Zapisz zmiany</button>
+        <button type="submit" class="btn">Zapisz zmiany</button>
     </form>
-    <p><a href="{{ route('admin.users.index') }}">← Lista</a></p>
-</body>
-</html>
+</div>
+@endsection
