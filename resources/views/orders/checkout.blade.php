@@ -19,59 +19,69 @@
 </div>
 <div class="summary"><p class="total">Suma: {{ number_format($total, 2, ',', ' ') }} zł</p></div>
 
-<div class="form-card" style="margin-top:30px">
-    <h2>Dane do wysyłki</h2>
-    <form method="POST" action="{{ route('orders.store') }}">
-        @csrf
+@guest
+    {{-- Krok 1: gość wybiera logowanie lub rejestrację --}}
+    <div class="form-card narrow" style="margin-top:30px; text-align:center">
+        <h2>Aby złożyć zamówienie, zaloguj się</h2>
+        <p class="muted">Po zalogowaniu wrócisz tutaj, a Twój koszyk zostanie zachowany.</p>
         <div class="field">
-            <label>Imię i nazwisko</label>
-            <input type="text" name="shipping_name" value="{{ old('shipping_name', auth()->user()?->name) }}">
+            <a href="{{ route('login') }}" class="btn btn-block">Zaloguj się</a>
         </div>
         <div class="field">
-            <label>Telefon (9 cyfr)</label>
-            <input type="text" name="shipping_phone" value="{{ old('shipping_phone', auth()->user()?->phone) }}">
+            <a href="{{ route('register') }}" class="btn btn-outline btn-block">Utwórz konto</a>
         </div>
-        <div class="field">
-            <label>Ulica (opcjonalnie)</label>
-            <input type="text" name="shipping_street" value="{{ old('shipping_street') }}">
-        </div>
-        <div class="field">
-            <label>Numer domu / mieszkania *</label>
-            <input type="text" name="shipping_house_number" placeholder="np. 12, 12A, 12/4" value="{{ old('shipping_house_number') }}">
-        </div>
-        <div class="field">
-            <label>Kod pocztowy *</label>
-            <input type="text" name="shipping_postcode" id="postcode" placeholder="00-000" maxlength="6" inputmode="numeric" value="{{ old('shipping_postcode') }}">
-        </div>
-        <div class="field">
-            <label>Miejscowość *</label>
-            <input type="text" name="shipping_city" value="{{ old('shipping_city') }}">
-        </div>
-
-        @guest
-            <div class="alert alert-error">Aby złożyć zamówienie, zaloguj się lub utwórz konto.</div>
-            <div class="actions">
-                <a href="{{ route('login') }}" class="btn">Zaloguj się</a>
-                <a href="{{ route('register') }}" class="btn btn-outline">Utwórz konto</a>
-            </div>
-        @else
-            @if (auth()->user()->role === 'klient')
+    </div>
+@else
+    @if (auth()->user()->role === 'klient')
+        {{-- Krok 2: zalogowany klient wypełnia dane dostawy --}}
+        <div class="form-card" style="margin-top:30px">
+            <h2>Dane do wysyłki</h2>
+            <form method="POST" action="{{ route('orders.store') }}">
+                @csrf
+                <div class="field">
+                    <label>Imię i nazwisko *</label>
+                    <input type="text" name="shipping_name" value="{{ old('shipping_name', auth()->user()->name) }}">
+                </div>
+                <div class="field">
+                    <label>Telefon (9 cyfr) *</label>
+                    <input type="text" name="shipping_phone" value="{{ old('shipping_phone', auth()->user()->phone) }}">
+                </div>
+                <div class="field">
+                    <label>Ulica (opcjonalnie)</label>
+                    <input type="text" name="shipping_street" value="{{ old('shipping_street') }}">
+                </div>
+                <div class="field">
+                    <label>Numer domu / mieszkania *</label>
+                    <input type="text" name="shipping_house_number" placeholder="np. 12, 12A, 12/4" value="{{ old('shipping_house_number') }}">
+                </div>
+                <div class="field">
+                    <label>Kod pocztowy *</label>
+                    <input type="text" name="shipping_postcode" id="postcode" placeholder="00-000" maxlength="6" inputmode="numeric" value="{{ old('shipping_postcode') }}">
+                </div>
+                <div class="field">
+                    <label>Miejscowość *</label>
+                    <input type="text" name="shipping_city" value="{{ old('shipping_city') }}">
+                </div>
                 <button type="submit" class="btn btn-block">Złóż zamówienie</button>
-            @else
-                <p class="muted">Konta moderatora i administratora nie składają zamówień.</p>
-            @endif
-        @endguest
-    </form>
-</div>
+            </form>
+        </div>
+    @else
+        <div class="alert alert-error" style="margin-top:30px">
+            Konta moderatora i administratora nie składają zamówień.
+        </div>
+    @endif
+@endguest
+@endsection
 
 @push('scripts')
 <script>
-document.getElementById('postcode').addEventListener('input', function () {
-    let v = this.value.replace(/\D/g, '').slice(0, 5);
-    if (v.length > 2) v = v.slice(0, 2) + '-' + v.slice(2);
-    this.value = v;
-});
+const postcode = document.getElementById('postcode');
+if (postcode) {
+    postcode.addEventListener('input', function () {
+        let v = this.value.replace(/\D/g, '').slice(0, 5);
+        if (v.length > 2) v = v.slice(0, 2) + '-' + v.slice(2);
+        this.value = v;
+    });
+}
 </script>
 @endpush
-
-@endsection

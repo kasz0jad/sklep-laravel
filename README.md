@@ -122,3 +122,8 @@ Projekt zaliczeniowy z przedmiotu Programowanie zaawansowane.
 - Osobne pola: ulica (opcjonalna), numer domu, kod pocztowy, miejscowość.
 - Kod pocztowy: `/^\d{2}-\d{3}$/` plus `not_in:00-000`. Numer domu: `/^\d{1,4}[A-Za-z]?(\/\d{1,4}[A-Za-z]?)?$/`.
 - Walidacja jest po stronie serwera; skrypt w przeglądarce tylko wstawia myślnik w kodzie.
+
+### Statusy zamówień
+- Nowe zamówienie dostaje status `nowe`. Poprzednie zamówienia tego klienta o statusie `nowe` zmieniają się na `w realizacji`.
+- Zmiana jest w `DB::transaction` razem ze złożeniem zamówienia: gdy zamówienie się nie uda, statusy wracają do stanu sprzed.
+- `Order::where(...)->update(...)` robi jedno zapytanie UPDATE dla wszystkich pasujących wierszy.

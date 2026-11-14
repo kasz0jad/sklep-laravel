@@ -18,8 +18,8 @@ class AuthController extends Controller
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255', 'regex:/^[\p{L}\s\-]+$/u'],
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
             'phone' => ['nullable', 'regex:/^\d{9}$/'],
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         $user = User::create([
@@ -31,8 +31,9 @@ class AuthController extends Controller
         ]);
 
         Auth::login($user);
+        $request->session()->regenerate();
 
-        return redirect('/dashboard');
+        return redirect()->intended('/dashboard');
     }
 
     public function showLogin()
@@ -49,7 +50,7 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect('/dashboard');
+            return redirect()->intended('/dashboard');
         }
 
         return back()->withErrors([

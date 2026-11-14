@@ -25,7 +25,7 @@ class OrderController extends Controller
         return view('orders.show', compact('order'));
     }
 
-    // Formularz zamówienia (dostępny także dla gości)
+    // Kasa: dostępna także dla gości (gość zobaczy wybór logowania)
     public function checkout()
     {
         $cart = session('cart', []);
@@ -42,7 +42,7 @@ class OrderController extends Controller
         ]);
         $total = $items->sum('subtotal');
 
-        // gość po zalogowaniu lub rejestracji wróci tutaj
+        // gość po zalogowaniu lub rejestracji wróci do kasy
         if (! auth()->check()) {
             session(['url.intended' => route('checkout')]);
         }
@@ -64,7 +64,7 @@ class OrderController extends Controller
         $cart = session('cart', []);
 
         if (empty($cart)) {
-            return redirect()->route('cart.index')->withErrors(['cart' => 'Koszyk jest pusty.']);
+            return redirect()->route('cart.index')->withErrors(['cart' => 'Koszyk jest pusta.']);
         }
 
         try {
@@ -82,6 +82,11 @@ class OrderController extends Controller
                     }
                     $total += $p->price * $cart[$p->id];
                 }
+
+                // poprzednie zamówienia tego klienta przestają być "nowe"
+                Order::where('user_id', auth()->id())
+                    ->where('status', 'nowe')
+                    ->update(['status' => 'w realizacji']);
 
                 $order = Order::create([
                     'user_id' => auth()->id(),
