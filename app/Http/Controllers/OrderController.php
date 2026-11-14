@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RuntimeException;
 
@@ -24,7 +25,8 @@ class OrderController extends Controller
         return view('orders.show', compact('order'));
     }
 
-    public function store()
+    // Formularz zamówienia (dostępny także dla gości)
+    public function checkout()
     {
         $cart = session('cart', []);
 
@@ -32,8 +34,41 @@ class OrderController extends Controller
             return redirect()->route('cart.index')->withErrors(['cart' => 'Koszyk jest pusty.']);
         }
 
+        $products = Product::whereIn('id', array_keys($cart))->get();
+        $items = $products->map(fn ($p) => [
+            'product' => $p,
+            'quantity' => $cart[$p->id],
+            'subtotal' => $p->price * $cart[$p->id],
+        ]);
+        $total = $items->sum('subtotal');
+
+        // gość po zalogowaniu lub rejestracji wróci tutaj
+        if (! auth()->check()) {
+            session(['url.intended' => route('checkout')]);
+        }
+
+        return view('orders.checkout', compact('items', 'total'));
+    }
+
+    public function store(Request $request)
+    {
+        $shipping = $request->validate([
+            'shipping_name' => ['required', 'string', 'max:255', 'regex:/^[\p{L}\s\-]+$/u'],
+            'shipping_phone' => ['required', 'regex:/^\d{9}$/'],
+            'shipping_street' => ['nullable', 'string', 'max:255', 'regex:/^[\p{L}0-9\s\.\-]+$/u'],
+            'shipping_house_number' => ['required', 'regex:/^\d{1,4}[A-Za-z]?(\/\d{1,4}[A-Za-z]?)?$/'],
+            'shipping_postcode' => ['required', 'regex:/^\d{2}-\d{3}$/', 'not_in:00-000'],
+            'shipping_city' => ['required', 'string', 'max:100', 'regex:/^[\p{L}\s\.\-]+$/u'],
+        ]);
+
+        $cart = session('cart', []);
+
+        if (empty($cart)) {
+            return redirect()->route('cart.index')->withErrors(['cart' => 'Koszyk jest pusty.']);
+        }
+
         try {
-            $order = DB::transaction(function () use ($cart) {
+            $order = DB::transaction(function () use ($cart, $shipping) {
                 $products = Product::whereIn('id', array_keys($cart))->lockForUpdate()->get();
 
                 if ($products->isEmpty()) {
@@ -52,6 +87,12 @@ class OrderController extends Controller
                     'user_id' => auth()->id(),
                     'total' => $total,
                     'status' => 'nowe',
+                    'shipping_name' => $shipping['shipping_name'],
+                    'shipping_phone' => $shipping['shipping_phone'],
+                    'shipping_street' => $shipping['shipping_street'] ?? null,
+                    'shipping_house_number' => $shipping['shipping_house_number'],
+                    'shipping_postcode' => $shipping['shipping_postcode'],
+                    'shipping_city' => $shipping['shipping_city'],
                 ]);
 
                 foreach ($products as $p) {

@@ -117,3 +117,8 @@ Projekt zaliczeniowy z przedmiotu Programowanie zaawansowane.
 - Siatka produktów to CSS Grid (`auto-fill`, `minmax`), układ jest responsywny.
 - Podgląd zdjęcia i karty produktu przy dodawaniu: JavaScript (`URL.createObjectURL`) bez wysyłania pliku na serwer.
 - Logo: plik SVG `public/images/logo.svg`.
+
+### Adres dostawy
+- Osobne pola: ulica (opcjonalna), numer domu, kod pocztowy, miejscowość.
+- Kod pocztowy: `/^\d{2}-\d{3}$/` plus `not_in:00-000`. Numer domu: `/^\d{1,4}[A-Za-z]?(\/\d{1,4}[A-Za-z]?)?$/`.
+- Walidacja jest po stronie serwera; skrypt w przeglądarce tylko wstawia myślnik w kodzie.

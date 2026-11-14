@@ -30,9 +30,15 @@
 @if ($order->shipping_name)
     <div class="form-card" style="margin-top:30px">
         <h2>Dane do wysyłki</h2>
-        <p>{{ $order->shipping_name }}</p>
-        <p>{{ $order->shipping_phone }}</p>
-        <p>{{ $order->shipping_address }}</p>
+        <p>{{ $order->shipping_name }}, tel. {{ $order->shipping_phone }}</p>
+        @if ($order->shipping_city)
+            <p>
+                {{ $order->shipping_street ? $order->shipping_street . ' ' : '' }}{{ $order->shipping_house_number }}<br>
+                {{ $order->shipping_postcode }} {{ $order->shipping_city }}
+            </p>
+        @else
+            <p>{{ $order->shipping_address }}</p>
+        @endif
     </div>
 @endif
 @endsection
