@@ -10,34 +10,36 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'phone', 'password', 'role'])]
+#[Fillable([
+    'name', 'email', 'phone', 'password', 'role',
+    'street', 'house_number', 'postcode', 'city',
+])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
-            // laravel sam hashuje hasło
             'password' => 'hashed',
         ];
     }
 
     public function isAdmin(): bool
-        {
-            return $this->role === 'admin';
-        }
+    {
+        return $this->role === 'admin';
+    }
 
     public function isModerator(): bool
-        {
-            return $this->role === 'moderator';
-        }
+    {
+        return $this->role === 'moderator';
+    }
+
+    public function hasAddress(): bool
+    {
+        return $this->house_number && $this->postcode && $this->city;
+    }
 }

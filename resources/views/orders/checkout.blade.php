@@ -20,7 +20,6 @@
 <div class="summary"><p class="total">Suma: {{ number_format($total, 2, ',', ' ') }} zł</p></div>
 
 @guest
-    {{-- Krok 1: gość wybiera logowanie lub rejestrację --}}
     <div class="form-card narrow" style="margin-top:30px; text-align:center">
         <h2>Aby złożyć zamówienie, zaloguj się</h2>
         <p class="muted">Po zalogowaniu wrócisz tutaj, a Twój koszyk zostanie zachowany.</p>
@@ -33,35 +32,49 @@
     </div>
 @else
     @if (auth()->user()->role === 'klient')
-        {{-- Krok 2: zalogowany klient wypełnia dane dostawy --}}
+        @php $u = auth()->user(); @endphp
         <div class="form-card" style="margin-top:30px">
             <h2>Dane do wysyłki</h2>
+
+            @if ($u->hasAddress())
+                <p class="muted">Wpisaliśmy Twoje zapisane dane. Możesz je zmienić tutaj lub na stałe w zakładce <a href="{{ route('profile.edit') }}"><strong>Konto</strong></a>.</p>
+            @endif
+
             <form method="POST" action="{{ route('orders.store') }}">
                 @csrf
                 <div class="field">
                     <label>Imię i nazwisko *</label>
-                    <input type="text" name="shipping_name" value="{{ old('shipping_name', auth()->user()->name) }}">
+                    <input type="text" name="shipping_name" value="{{ old('shipping_name', $u->name) }}">
                 </div>
                 <div class="field">
                     <label>Telefon (9 cyfr) *</label>
-                    <input type="text" name="shipping_phone" value="{{ old('shipping_phone', auth()->user()->phone) }}">
+                    <input type="text" name="shipping_phone" value="{{ old('shipping_phone', $u->phone) }}">
                 </div>
                 <div class="field">
                     <label>Ulica (opcjonalnie)</label>
-                    <input type="text" name="shipping_street" value="{{ old('shipping_street') }}">
+                    <input type="text" name="shipping_street" value="{{ old('shipping_street', $u->street) }}">
                 </div>
                 <div class="field">
                     <label>Numer domu / mieszkania *</label>
-                    <input type="text" name="shipping_house_number" placeholder="np. 12, 12A, 12/4" value="{{ old('shipping_house_number') }}">
+                    <input type="text" name="shipping_house_number" placeholder="np. 12, 12A, 12/4" value="{{ old('shipping_house_number', $u->house_number) }}">
                 </div>
                 <div class="field">
                     <label>Kod pocztowy *</label>
-                    <input type="text" name="shipping_postcode" id="postcode" placeholder="00-000" maxlength="6" inputmode="numeric" value="{{ old('shipping_postcode') }}">
+                    <input type="text" name="shipping_postcode" id="postcode" placeholder="00-000" maxlength="6" inputmode="numeric" value="{{ old('shipping_postcode', $u->postcode) }}">
                 </div>
                 <div class="field">
                     <label>Miejscowość *</label>
-                    <input type="text" name="shipping_city" value="{{ old('shipping_city') }}">
+                    <input type="text" name="shipping_city" value="{{ old('shipping_city', $u->city) }}">
                 </div>
+
+                <div class="field">
+                    <label style="font-weight:400">
+                        <input type="checkbox" name="save_address" value="1" style="width:auto; min-width:0"
+                               @checked(session()->hasOldInput() ? old('save_address') : ! $u->hasAddress())>
+                        Zapisz moje dane do kolejnych zamówień
+                    </label>
+                </div>
+
                 <button type="submit" class="btn btn-block">Złóż zamówienie</button>
             </form>
         </div>

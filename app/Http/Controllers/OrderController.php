@@ -59,6 +59,7 @@ class OrderController extends Controller
             'shipping_house_number' => ['required', 'regex:/^\d{1,4}[A-Za-z]?(\/\d{1,4}[A-Za-z]?)?$/'],
             'shipping_postcode' => ['required', 'regex:/^\d{2}-\d{3}$/', 'not_in:00-000'],
             'shipping_city' => ['required', 'string', 'max:100', 'regex:/^[\p{L}\s\.\-]+$/u'],
+            'save_address' => ['nullable', 'boolean'],
         ]);
 
         $cart = session('cart', []);
@@ -116,6 +117,16 @@ class OrderController extends Controller
             });
         } catch (RuntimeException $e) {
             return redirect()->route('cart.index')->withErrors(['cart' => $e->getMessage()]);
+        }
+
+       if ($request->boolean('save_address')) {
+            $request->user()->update([
+                'phone' => $shipping['shipping_phone'],
+                'street' => $shipping['shipping_street'] ?? null,
+                'house_number' => $shipping['shipping_house_number'],
+                'postcode' => $shipping['shipping_postcode'],
+                'city' => $shipping['shipping_city'],
+            ]);
         }
 
         session()->forget('cart');

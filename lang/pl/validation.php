@@ -6,6 +6,7 @@ return [
     'unique' => 'Taka wartość pola :attribute jest już zajęta.',
     'confirmed' => 'Potwierdzenie pola :attribute nie zgadza się.',
     'regex' => 'Pole :attribute ma nieprawidłowy format.',
+    'required_with' => 'Pole :attribute jest wymagane, gdy podano inne pola adresu.',
     'not_in' => 'Wybrana wartość pola :attribute jest nieprawidłowa.',
     'numeric' => 'Pole :attribute musi być liczbą.',
     'integer' => 'Pole :attribute musi być liczbą całkowitą.',
@@ -35,5 +36,9 @@ return [
         'shipping_house_number' => 'numer domu',
         'shipping_postcode' => 'kod pocztowy',
         'shipping_city' => 'miejscowość',
+        'street' => 'ulica',
+        'house_number' => 'numer domu',
+        'postcode' => 'kod pocztowy',
+        'city' => 'miejscowość',
     ],
 ];

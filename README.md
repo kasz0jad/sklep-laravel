@@ -127,3 +127,9 @@ Projekt zaliczeniowy z przedmiotu Programowanie zaawansowane.
 - Nowe zamówienie dostaje status `nowe`. Poprzednie zamówienia tego klienta o statusie `nowe` zmieniają się na `w realizacji`.
 - Zmiana jest w `DB::transaction` razem ze złożeniem zamówienia: gdy zamówienie się nie uda, statusy wracają do stanu sprzed.
 - `Order::where(...)->update(...)` robi jedno zapytanie UPDATE dla wszystkich pasujących wierszy.
+
+### Zapisany adres dostawy
+- Adres (ulica, numer domu, kod, miejscowość) i telefon są w tabeli `users`; w kasie pole wyboru "Zapisz moje dane" zapisuje je po udanym zamówieniu.
+- Formularz kasy i widok Konta są wypełniane z `auth()->user()`, a `old()` ma pierwszeństwo po błędzie walidacji.
+- W Koncie `required_with` wymusza komplet pól adresu, gdy podano część.
+- Zamówienie kopiuje adres do `orders`, więc zmiana adresu w Koncie nie zmienia historii zamówień.
