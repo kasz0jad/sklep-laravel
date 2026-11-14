@@ -19,3 +19,8 @@
 .tile p { margin:0; color:var(--mid); font-size:14px; }
 .summary { max-width:360px; margin-left:auto; margin-top:20px; text-align:right; }
 .summary .total { font-size:22px; font-weight:700; }
+.tag-nowe { background:#e0ecff; color:#1b4fa8; }
+.tag-w-realizacji { background:#fde8c8; color:#8a5200; }
+.tag-wyslane { background:#e8f6ec; color:#176b34; }
+.tag-zrealizowane { background:#111; color:#fff; }
+.tag-anulowane { background:#fdecec; color:#9b1c1c; }

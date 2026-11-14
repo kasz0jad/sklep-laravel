@@ -10,6 +10,10 @@
         <h3>Użytkownicy</h3>
         <p>Dodawanie, edycja i usuwanie kont</p>
     </a>
+    <a href="{{ route('admin.orders.index') }}" class="tile">
+        <h3>Zamówienia</h3>
+        <p>Podgląd, edycja i anulowanie zamówień</p>
+    </a>
     <a href="{{ route('products.index') }}" class="tile">
         <h3>Produkty</h3>
         <p>Zarządzanie asortymentem</p>

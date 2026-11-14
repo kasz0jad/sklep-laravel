@@ -32,6 +32,11 @@ Projekt zaliczeniowy z przedmiotu Programowanie zaawansowane.
 - [x] Wyrażenia regularne w walidacji
 - [x] Zabezpieczenie przed SQL Injection
 - [x] Polskie komunikaty walidacji i CSS
+- [x] Edycja produktów, zdjęcia i kategorie (moderator, admin)
+- [x] Sklep dla gości, zamówienie tylko po zalogowaniu
+- [x] Zapisany adres dostawy w koncie klienta
+- [x] Panel zamówień admina (podgląd, edycja, anulowanie)
+- [x] Wygląd sklepu LUMA (wspólny szablon, logo, style)
 - [ ] (opcjonalnie) Aktywacja konta przez e-mail
 
 ## Notatki
@@ -132,4 +137,23 @@ Projekt zaliczeniowy z przedmiotu Programowanie zaawansowane.
 - Adres (ulica, numer domu, kod, miejscowość) i telefon są w tabeli `users`; w kasie pole wyboru "Zapisz moje dane" zapisuje je po udanym zamówieniu.
 - Formularz kasy i widok Konta są wypełniane z `auth()->user()`, a `old()` ma pierwszeństwo po błędzie walidacji.
 - W Koncie `required_with` wymusza komplet pól adresu, gdy podano część.
+- Zamówienie kopiuje adres do `orders`, więc zmiana adresu w Koncie nie zmienia historii zamówień.
+
+### Zamówienia w panelu admina
+- Admin (`role:admin`) ma podgląd wszystkich zamówień, edycję danych wysyłki i statusu oraz anulowanie.
+- "Usunięcie" zamówienia to anulowanie (status `anulowane`), rekord zostaje w bazie, a klient widzi go w historii.
+- Anulowanie jest w `DB::transaction` z `lockForUpdate()`: zwraca towar do magazynu (`increment('stock', ...)`) i nie da się go wykonać dwa razy.
+- `Route::resource(...)->only([...])` tworzy tylko potrzebne trasy; alias `AdminOrderController` rozróżnia dwie klasy o tej samej nazwie.
+
+### Zamówienia w panelu admina
+- Admin (`role:admin`) ma podgląd wszystkich zamówień, edycję danych wysyłki i statusu oraz anulowanie.
+- "Usunięcie" zamówienia to anulowanie (status `anulowane`), rekord zostaje w bazie, a klient widzi go w historii.
+- Anulowanie jest w `DB::transaction` z `lockForUpdate()`: zwraca towar do magazynu i nie da się go wykonać dwa razy.
+- Relacja `Order::user()` (`belongsTo`) i `with('user')` (eager loading) unikają problemu N+1 zapytań.
+
+### Statusy zamówień
+- Nowe zamówienie ma status `nowe`; poprzednie zamówienia tego klienta o statusie `nowe` zmieniają się na `w realizacji`.
+
+### Zapisany adres dostawy
+- Adres i telefon są w tabeli `users`; w kasie pole wyboru "Zapisz moje dane" zapisuje je po udanym zamówieniu.
 - Zamówienie kopiuje adres do `orders`, więc zmiana adresu w Koncie nie zmienia historii zamówień.

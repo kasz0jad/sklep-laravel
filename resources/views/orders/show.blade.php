@@ -6,7 +6,7 @@
 
 <h1>Zamówienie #{{ $order->id }}</h1>
 <p class="muted">
-    {{ $order->created_at }} · Status: <span class="tag">{{ $order->status }}</span>
+    {{ $order->created_at }} · Status: <span class="tag tag-{{ \Illuminate\Support\Str::slug($order->status) }}">{{ $order->status }}</span>
 </p>
 
 <div class="table-wrap">
